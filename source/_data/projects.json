@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Scala3 | Silent Lang",
+    "url": "https://github.com/5eqn/silent-lang",
+    "desc": "A functional language designed for Competitive Programming"
+  },
+  {
+    "name": "Lua | Nothura",
+    "url": "https://github.com/5eqn/nothura.nvim",
+    "desc": "Link to page of PDF in Markdown, with Neovim and Zathura"
+  },
+  {
+    "name": "Dart | bInary Charter",
+    "url": "https://github.com/blnary/charter",
+    "desc": "A chart maker for rhythm game bInary"
+  },
+  {
+    "name": "Python | BPM Analyser",
+    "url": "https://github.com/blnary/bpm-server",
+    "desc": "BPM analyser for rhythm game bInary"
+  }
+]
