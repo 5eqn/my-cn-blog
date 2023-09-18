@@ -1,22 +1,22 @@
 [
   {
-    "name": "Scala3 | Silent Lang",
+    "name": "Scala3 | 绷语言",
     "url": "https://github.com/5eqn/silent-lang",
-    "desc": "A functional language designed for Competitive Programming"
+    "desc": "专为算法竞赛设计的函数式编程语言"
   },
   {
     "name": "Lua | Nothura",
     "url": "https://github.com/5eqn/nothura.nvim",
-    "desc": "Link to page of PDF in Markdown, with Neovim and Zathura"
+    "desc": "在 Markdown 中使用对 PDF 的链接，基于 Neovim 和 Zathura"
   },
   {
-    "name": "Dart | bInary Charter",
+    "name": "Dart | bInary 制谱器",
     "url": "https://github.com/blnary/charter",
-    "desc": "A chart maker for rhythm game bInary"
+    "desc": "一款用 Flutter 框架实现的音游制谱器"
   },
   {
-    "name": "Python | BPM Analyser",
+    "name": "Python | BPM 分析器",
     "url": "https://github.com/blnary/bpm-server",
-    "desc": "BPM analyser for rhythm game bInary"
+    "desc": "基于 Librosa 库改良的歌曲 BPM 分析模块"
   }
 ]
