@@ -1,43 +1,41 @@
 ---
-title: Frontend | JavaScript drives me CRAZY
+title: 前端 | JavaScript 让我为之癫狂
 date: 2023-09-15 15:59:42
 tags:
-- Frontend
+- 前端
 - JavaScript
-- Suffer
+- 痛苦
 ---
 
 ## Scene 1
 
-After finishing a pbkdf2-based password hashing module and deploying, the website instantly *exploded*.
-
-Upon loading, I got:
+用 pbkdf2 写好密码哈希模块部署之后，网站整个打不开了。网站加载时就直接报错：
 
 ```
 TypeError: can't access property "from", n is undefined
 ```
 
-I asked ChatGPT and StackOverflow, but I have *no* idea what the meow is going on! So I stopped programming for a while.
+我尝试从 ChatGPT 和 StackOverflow 寻找答案，但我一点思路都没有！所以我摆烂了一会。
 
-After several minutes, it came to me that I'd better run it locally, so that variable names are not obsfucated. I got:
+在几分钟后，我突然想到我或许应该在本地跑一下，来避免变量名被混淆。报错信息变成了：
 
 ```
 TypeError: can't access property "from", Buffer is undefined
 ```
 
-I checked the code, and noticed that the `Buffer` comes from `buffer.Buffer`. I asked ChatGPT and StackOverflow again, still not getting any clues. So I gave up again.
+我发现这个 `Buffer` 在代码中是 `buffer.Buffer`，其中 `buffer` 是 `import` 出来的。我又尝试在 ChatGPT 和 StackOverflow 寻找答案，还是没思路，所以又放弃了。
 
 ### Fix
 
-After several hours, I decided to try again. Just when I'm about to give up, I tried installing `buffer` library, and everything worked!
+摆烂几小时之后，我决定再试一次。在绝望边缘，我发现安装一下 `buffer` 库，一切就都好了！
 
-It seemed that `pbkdf2` library *can't* resolve it's dependencies well, this is why JS is bad.
+只能说这是因为 `pbkdf2` 库没有处理好自己的依赖关系，这就是为什么 JavaScript 傻呗！
 
 ## Scene 2
 
-A JavaScript function terminated the whole call stack *without throwing an error*. This is what happened to my blood pressure.
+一个 JavaScript 函数成为了黑洞，这是我的血压发生的变化。
 
-I changed my code to:
+调试时，我把代码改成：
 
 ```javascript
 export function hash(password, saltString) {
@@ -54,9 +52,9 @@ export function hash(password, saltString) {
 }
 ```
 
-and I got 3 zeros being logged. The `pbkdf2` meowed up again!
+然后只输出了 3 个 0。又是 `pbkdf2` 干的好事！
 
-I changed the code to the following, to see if it's because type of `salt` changed to `TypedArray`:
+由于之前以字符串作为 `salt` 是有用的，我想测试下是不是因为 `salt` 的类型是 `TypedArray` 才导致寄掉：
 
 ```javascript
 export function hash(password, saltString) {
@@ -75,11 +73,11 @@ export function hash(password, saltString) {
 }
 ```
 
-The function stuck at the second `pbkdf2Sync`! Note that `salt` is indeed a `Uint8Array(32)`, and this actually works in account frontend!
+果然在第二次 `pbkdf2Sync` 的调用处寄掉了！这里我确认了 `salt` 是一个长度为 32 的 `Uint8Array`，但同样的代码在另一个前端是正常工作的！
 
-Let's do a comparison:
+对比：
 
-### Code in account-frontend
+### 账户前端的代码
 
 ```javascript
 export function hash(password, salt) {
@@ -97,7 +95,7 @@ hashing password with salt 237,154,219,59,23,19,10,206,7,62,20,221,187,178,16,34
 ed3ce14e8cfed46e7d654e02dd8415de553f4e5fadbf67ac75f770917b2d2d86
 ```
 
-### Code in cloud-ide
+### 首页前端的代码
 
 ```javascript
 export function hash(password, saltStr) {
@@ -115,9 +113,9 @@ export function hash(password, saltStr) {
 hashing password with salt 237,154,219,59,23,19,10,206,7,62,20,221,187,178,16,34,27,129,234,68,237,195,38,224,75,61,124,108,96,44,222,129
 ```
 
-And nothing following!
+然后就什么都没了！
 
-I made a better comparison:
+我进行了一个更清晰的对比：
 
 ```javascript
 export function hash(password, saltStr) {
@@ -135,8 +133,8 @@ export function hash(password, saltStr) {
 }
 ```
 
-The first call of `pbkdf2Sync` failed!
+第一次调用 `pbkdf2Sync`，程序就寄掉了！
 
 ### Fix
 
-Reinstalling `pbkdf2` package solves the problem.
+重装 `pbkdf2` 包就好了。真的是重装而不是之前没装，我只能说灵车！

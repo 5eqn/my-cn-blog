@@ -3,8 +3,8 @@ title: 生活 | 用 MBTI 理解他人
 date: 2023-09-16 12:57:37
 tags:
 - MBTI
-- Earth OL
-- Illustrated
+- 生活
+- 有插图
 ---
 
 在学习 MBTI 后，我最大的收获是了解如何真正代入他人角度进行思考。
