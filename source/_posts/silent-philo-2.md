@@ -7,7 +7,7 @@ tags:
 - 技术性
 ---
 
-## CF 737 B.
+## CF 737 B. (*1100)
 
 [原题](https://codeforces.com/contest/1557/problem/B)
 
