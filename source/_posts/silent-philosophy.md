@@ -9,7 +9,7 @@ tags:
 
 喜报，我还是懒得搞英文博客了！感觉完全没有动机喵。
 
-## CF 737 A.
+## CF 737 A. (*800)
 
 [原题](https://codeforces.com/contest/1557/problem/A)
 
