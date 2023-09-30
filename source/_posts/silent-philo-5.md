@@ -52,7 +52,7 @@ int main() {
 ### 绷语言
 
 ```
-main : Int
+main : Void
 main =
   let t = input
   run for t
@@ -65,7 +65,6 @@ main =
       if ptr == n then nope else
       (max res (gcd sum[ptr] sum[n]), ptr + 1)
     print(res)
-  0
 ```
 
 ### 逗号结合律哲学
