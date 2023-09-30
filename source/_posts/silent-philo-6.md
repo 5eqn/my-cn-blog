@@ -52,6 +52,10 @@ int main() {
 
 ### 绷语言
 
+- `cnt` 表示上次请求得到的二进制表示中 `1` 的数量
+- `acc` 表示目前已累积的结果大小
+- `ptr` 表示可以减掉第几位（从 `0` 开始，如果 `ptr == cnt` 说明会减到 `-1`，故停止）
+
 ```
 main : Void
 main =
@@ -60,10 +64,10 @@ main =
     let (cnt, acc, ptr) = (input, 0, 0) rec
       if ptr == cnt then nope else
       let value = pow 2 ptr
-      run print(`- {value}`)
+      run print `- {value}`
       let new_cnt = input
       (new_cnt, acc + value, ptr + new_cnt - cnt + 1)
-    print(`! {acc + pow 2 ptr - 1}`)
+    print `! {acc + pow 2 ptr - 1}`
 ```
 
 ### 使用绷语言思路重写 C++ 程序
