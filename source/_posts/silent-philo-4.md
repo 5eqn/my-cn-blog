@@ -237,6 +237,7 @@ main =
   run print(n - res[0])
   run for i in n
     if vis[i] then null else print(i + 1)
+  0
 ```
 
 ### 特性说明
