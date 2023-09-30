@@ -62,7 +62,6 @@ tags:
 在教学的时候，更适合先想一个能吸引约 30% 的人的动机，然后明确、坚持使用这个动机。浪费剩下 70% 的人的时间是极其不道德和低效的。
 
 自学的时候，你可能更希望有个专为你定制的动机，这样的动机通常可以比教育目的的动机更明确，效果也会更好。找一个你愿意终生追求的动机，比你想象的更难，也能带来更多力量。
-When self-learning, you would prefer a motivation that's specially tailored for yourself, as it can generally be more specific than a educational-purpose motivation. Having a custom motivation that you'll strive for during your *whole life*, is both more difficult and more powerful than it seems.
 
 ## 找到你的动机
 
