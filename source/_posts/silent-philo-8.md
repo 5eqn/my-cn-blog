@@ -102,9 +102,9 @@ let filt = fold arr [] (res => e =>
 ```
 factorList : Int -> [[Int]]
 factorList n =
-  fold [2 to n] ([[] for n], [false for n]) ((ls, vis) => num =>
+  fold [2 to n] ([[] for n], [false for n]) (ls, vis) => num =>
     if vis num then (ls, vis) else
-    fold [num to n step num] (ls, vis) ((ls, vis) => next =>
+    fold [num to n step num] (ls, vis) (ls, vis) => next =>
       (ls[next] <- ls[next] :: num, vis[next] <- true)
     
 main : Void
@@ -114,7 +114,7 @@ main =
   let f = factorList (3e5 + 4)
   let foldMask aID init fun =
     let maskCnt = 2 ** len f[a[aID]]
-    fold [0 to maskCnt] init (res => mask =>
+    fold [0 to maskCnt] init res => mask =>
       let getInfo num par mask digit =
         if mask == 0 then (num, par) else
         if mask % 2 == 1
@@ -122,13 +122,13 @@ main =
         else getInfo num par (mask / 2) (digit + 1)
       let (num, par) = getInfo 1 1 mask 0
       fun res (num, par)
-  let (res, _, _) = fold [0 to n] (0, [0 for n], [0 for n]) (
+  let (res, _, _) = fold [0 to n] (0, [0 for n], [0 for n]) 
     (res, cnt, sum) => aID =>
-      let (cntTot, sumTot) = foldMask aID (0, 0) ((c, s) => (num, par) =>
-        (c + cnt[num] * par, s + sum[num] * par))
-      let (cnt, sum) = foldMask aID (cnt, sum) ((cnt, sum) => (num, _) =>
-        (cnt[num] <- cnt[num] + 1, sum[num] <- sum[num] + aID + 1))
-      getRes (res + cntTot * aID - sumTot) cnt sum (aID + 1))
+      let (cntTot, sumTot) = foldMask aID (0, 0) (c, s) => (num, par) =>
+        (c + cnt[num] * par, s + sum[num] * par)
+      let (cnt, sum) = foldMask aID (cnt, sum) (cnt, sum) => (num, _) =>
+        (cnt[num] <- cnt[num] + 1, sum[num] <- sum[num] + aID + 1)
+      getRes (res + cntTot * aID - sumTot) cnt sum (aID + 1)
   run print res
 ```
 
