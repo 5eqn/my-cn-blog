@@ -77,7 +77,7 @@ init = sam [samNode -1 0 empty] 0
   sam (nodes[next].link <- clone and [curr].link <- clone) curr
 ```
 
-### CPP 实现
+### C++ 实现
 
 ```cpp
 struct sam {
@@ -164,7 +164,7 @@ struct sam {
 
 ### C++ 实现
 
-```
+```cpp
 i64 cnt[N * 2], vis[N * 2];
 
 void dfs(i64 x) {
