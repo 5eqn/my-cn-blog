@@ -20,7 +20,9 @@ mergeSort :: Ord a => [a] -> [a]
 mergeSort = hylo alg coalg where
   alg EmptyF      = []
   alg (LeafF c)   = [c]
-  alg (NodeF l r) = merge l r  coalg []  = EmptyF
+  alg (NodeF l r) = merge l r
+
+  coalg []  = EmptyF
   coalg [x] = LeafF x
   coalg xs  = NodeF l r where
     (l, r) = splitAt (length xs `div` 2) xs
