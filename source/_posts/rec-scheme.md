@@ -28,7 +28,7 @@ mergeSort = hylo alg coalg where
     (l, r) = splitAt (length xs `div` 2) xs
 ```
 
-事实上，Anamorphism 是满射（这会导致部分不同的值被映射到相同的「递归结构实例」，这也是为什么记忆化[^5] 只能对 Anamorphism 做），Catamorphism 是单射，观察一些自然数递归容易感受到这一规律。
+事实上，Anamorphism 是满射（这会导致部分不同的值被映射到相同的「递归结构实例」，这也是理解记忆化[^5] 只能对 Anamorphism 做的一条路径），Catamorphism 是单射，观察一些自然数递归容易感受到这一规律。
 
 ### 一些小改进
 
@@ -36,25 +36,21 @@ mergeSort = hylo alg coalg where
 
 - Paramorphism: 保留原参数的可引用性
   - 如果在想实现就地修改的时候，只需要使用 Ana- + Catamorphism 就够了
-- Apomorphism: 允许 break
-  - 但本来不就能 break 吗？有什么区别？
+- Apomorphism: 即使 ADT 没有单位元，也允许 break
 - Histomorphism: 记录结果历史
-  - 或许可以实现自动记忆化？
-- Futumorphism: 允许树状 break
-  - 依然不太明白
+  - 无法实现自动记忆化，记忆化的课题需要和 Vector 一同探索
+- Futumorphism: 允许返回多层嵌套结构
 - Chrono- / Hypomorphism: 先前东西的神秘组合
 
 ## `bind` 可以自动生成
 
 上面生成的是 `map`、`cata`、`ana`、`fold` 之类的函数，但其实 `bind` 也是可以生成的。
 
-在参数化 ADT，例如 `Interaction next`，使之成为 Functor 后，Free Monad[^6] 可以自动为 `Free Interaction r = Free (Interaction (Free Interaction)) | Pure r` 生成 `bind` 函数。其和 Futumorphism 的联系尚不明确。
+在参数化 ADT，例如 `Interaction next`，使之成为 Functor 后，Free Monad[^6] 可以自动为 `Free Interaction r = Free (Interaction (Free Interaction)) | Pure r` 生成 `bind` 函数。其和 `Fix` 的区别就是添加了单位元 `Pure r`，但这也使其实例有了可控的递归层数，拥有了 Futumorphism 的性质。
 
 ## 下一步
 
 - 尝试更多例子
-  - 找到 free monad 和 futumorphism 的关联
-  - 探索记忆化的更多可能
   - 尝试改成 fully in-place 的版本
 - 恶补猫论知识，了解对偶到底是什么含义
 
