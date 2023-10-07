@@ -94,12 +94,11 @@ map t f cont =
 
 ## 有待了解的东西
 
-- Recursion Schemes
-- freer monad 及相关东西，查找已有自动生成 fold / bind 的实践
-- Koka 是否用寄存器存储非递归 ADT 的实例
-- FP 处理 indexed array 的最佳实践
-- pointer-tagging
-- pointer-reversal
+- [x] Recursion Schemes
+- [x] freer monad 及相关东西，查找已有自动生成 fold / bind 的实践
+- [ ] FP 处理 indexed array 的最佳实践
+- [x] pointer-tagging，其实就是 `Either Tag Pointer`
+- [x] pointer-reversal，其实就是遍历到一个东西之后把指针往回指
 
 [^1]:https://www.microsoft.com/en-us/research/publication/fp2-fully-in-place-functional-programming/
 [^2]:https://link.springer.com/chapter/10.1007/3540543961_7
