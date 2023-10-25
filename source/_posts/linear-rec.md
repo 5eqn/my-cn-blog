@@ -131,3 +131,172 @@ app a f (L up x r) = down r f (R a x up)
 但这会破坏原有的数据！原先的 `map` 相当于 `cata` 的时候已经在构建一个新的 `Tree`，因此是 FIP 的，但现在这个不是！
 
 对于 `fold` 而不产生栈空间数据结构的情况，或许 Paramorphism / Histomorphism 才是 FIP 的？
+
+## 补充
+
+- `cata` 不可能 FIP，最多通过把产生的值存在栈空间实现 FBIP，内存消耗为 $O(\log n)$
+- 考虑尝试把正常的递归写成 Hylomorphism，看看是否 easier to reason about
+- indexed DS 和 recursive DS 疑似有某种对应关系，但对于例如树的东西想不到怎么推广
+
+### Indexed DS
+
+如果把 Indexed Array 强行当作链表，我们可以写出：
+
+```
+remove ls a =
+  ls.cata
+    [] => []
+    ls :: x if x == a => ls
+    ls :: x => ls :: x
+```
+
+这对于 Indexed Array 显然是不合法的。
+
+如果把 Indexed Array 视为黑箱，则无法得到 cata。
+
+如果修改 `remove` 函数，保留 cata，只生成黑箱：
+
+```
+remove ls a =
+  ls.cata
+    [] => [0 for ls.length]
+    ls :: x if x == a => ls
+    ls :: x => ls[i] <- x
+```
+
+可以看到两个问题：
+
+- `i` 如何获取？
+- 该函数不 FIP
+
+如果再创建一个临时的 0 至 n 的链表，以此 fold over an indexed array，应当是一个可行方案。
+
+### Index encoded in Reuse Token
+
+在和 Anqur 讨论后获得一个灵感：给 Reuse Token 的 Type 添加位置参数，使其能够反映位置信息。
+
+不过这样一个 Vector 可以被 destructively matched into 很多不同的东西，这很坏。
+
+### Indexed DS and Coinductive Types
+
+考虑基础的 Coinductive Type，`Stream`：
+
+```
+data Stream
+  hd : Stream -> Nat
+  tl : Stream -> Stream
+```
+
+如果我们纤维化一个构造函数：
+
+```
+data Array T n
+  get : Fin n -> Array T n -> T
+```
+
+就可以构造出一个 Indexed DS。
+
+考虑构造 Stream 的方式：
+
+```
+stream : Nat -> Stream
+stream n = make s from
+  hd s = n
+  tl s = stream (S n)
+```
+
+推广到数组：
+
+```
+array : Array Int 3
+array = make a from
+  get i a = i.toInt
+```
+
+Inductive Type 添加 Token：
+
+```
+data Tuple
+  Tuple : Tok -> A -> B -> C -> Tuple
+```
+
+Coinductive Type 添加 Token：
+
+```
+data Stream
+  hd : Stream -> Nat
+  tl : Stream -> Stream
+  tok : Stream -> Tok
+```
+
+对于数组：
+
+```
+data Array
+  get : Fin n -> Array T n -> T
+  tok : Array T n -> Tok
+```
+
+FIP 的 inductive type 修改：
+
+```
+mod : Tuple -> Tuple
+mod (Tuple tok a b c) = Tuple tok a 0 c
+```
+
+FBIP 的数组元素修改：
+
+```
+mod : Array Int n -> Array Int n
+mod arr = make a from
+  get 0 a = 0
+  get i a = get i arr
+  tok a = tok arr
+```
+
+这种方式的缺点是判断元素是否修改太过 Ad-Hoc。但是！考虑下面的改动方法：
+
+```
+data Array
+  get : (x : Fin n) -> Array T n -> (T, Tok x)
+
+mod : Array Int n -> Fin n -> Int -> Array Int n
+mod arr index value = make a from
+  get i a = case i of
+    index =>
+      let (_, tok) = get index arr in
+      (value, tok)
+    otherwise => get i arr
+```
+
+这样可以轻松地避免 cross-updating，从而实现线程安全！（但实际上起到的效果只是要求必须点对点 `map`）
+
+如果参数反转？
+
+```
+data Array
+  content : Array T n -> (x : Fin n) -> (T, Tok x)
+
+mod : Array Int n -> Fin n -> Int -> Array Int n
+mod arr index value = make a from
+  content a = \i => case i of
+    index =>
+      let (_, tok) = content arr index in
+      (value, tok)
+    otherwise => content arr i
+```
+
+那完全可以不使用 coinductive type！
+
+```
+data Array T n = Array ((x : Fin n) -> (T, Tok x))
+
+mod : Array Int n -> Fin n -> Int -> Array Int n
+mod (Array arr) index value = Array (
+  \i => case i of
+    index =>
+      let (_, tok) = arr index
+      (value, tok)
+    otherwise => arr i
+)
+```
