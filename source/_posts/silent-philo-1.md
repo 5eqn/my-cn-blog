@@ -84,9 +84,9 @@ run for t
     y_init + a[next_i], next_i + 1
 
   // transfer until value declines
-  let x, y, u, v, res = 1, y_init, 1, n - 1, -inf rec
+  let x, y, u, v, res = 0, y_init, 1, n - 1, -inf rec
     if v == 0 then nope else
-    x + 1, y - 1, u + a[x], v - a[x], res.max(x / u + y / v)
+    x + a[x], y - a[x], u + 1, v - 1, res.max(x / u + y / v)
   run print(res)
 ```
 
@@ -99,3 +99,41 @@ run for t
 - 专一：用 `mut`（来自 Rust）和 `rec`（来自 OCaml）封装一切就地修改，在块内享受 C 的便捷，在块外享受函数式的严谨。在 C++ 中难以保证一个值未来不会被错误地修改，从而无法进行较为激进的编译器优化，程序逻辑也容易产生不可预料的问题。
 - 丝滑：基于无括号元组的丝滑编辑体验。在 C++ 中需要使用 `pair`。
 - 严谨：利用 `nope` 关键字在显然不合理时跳出循环，若忘记添加 `nope` 会无法编译通过。在 C++ 中则需要自己手动模拟程序运行并判断边界情况，更容易产生错误。
+
+## Reimagined
+
+### 自递归
+
+```
+main : Void
+main =
+  t = input
+  a = [input for n].sort >
+  sum = a.cata
+    arr => case arr of
+      (tl :: x) :: y => (tl :: x) :: x + y
+      _ => arr
+  mx = (zip [1..n] sum[:n - 1]).cata
+    arr => case arr of
+      last :: (i, x) => max last (x / i + (a[n - 1] - x) / (n - i))
+      _ => -inf
+  print mx
+```
+
+### 辅助递归
+
+```
+main : Void
+main = 
+  t = input
+  a = [input for n].sort >
+  sum = [1..n].cata
+    ls => case ls of
+      [] => a
+      arr :: i => arr[i] +<- arr[i - 1]
+  mx = [1..n].cata
+    ls => case ls of
+      [] => -inf
+      last :: i => max last (arr[i - 1] / i + (arr[n - 1] - arr[i - 1]) / (n - i))
+  print mx
+```
