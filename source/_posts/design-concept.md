@@ -21,13 +21,13 @@ tags:
 
 「x 代表的东西」中，「x」的类型是「自然元素」，「x 代表的东西」的类型是「信号」。学术上，我们称「代表」的类型是从自然元素到信号的「函数」，「x」是「代表」这个函数的「形式参数」。翻译成编程语言就是：
 
-```
+```haskell
 represent : Element -> Signal
 ```
 
 火代表的东西是危险。学术上，我们称「火」是「代表」这个函数的「实际参数」，以火为实际参数「调用」「代表」这个函数得到的「值」是危险信号。翻译成编程语言就是：
 
-```
+```haskell
 represent Fire = Danger
 ```
 
@@ -35,25 +35,25 @@ represent Fire = Danger
 
 注意：烤一个食物，被烤的旧食物将被烤好的新食物「取代」。学术上，我们称被烤的食物是一个「一重参数」，或者「线性参数」。
 
-```
+```haskell
 bake : 1 Food -> Food
 ```
 
 烤肉得到的东西是熟肉。翻译成编程语言就是：
 
-```
+```haskell
 bake Meat = CookedMeat
 ```
 
 「渲染 x 得到的东西」中，「x」的类型是「血量」，「渲染 x 得到的东西」的类型是「组件」。翻译成编程语言就是：
 
-```
+```haskell
 render : HP -> Widget
 ```
 
 渲染低血量得到的东西是窄而红的矩形。翻译成编程语言就是：
 
-```
+```haskell
 render LowHP = ThinAndRedBox
 ```
 
@@ -71,7 +71,7 @@ render LowHP = ThinAndRedBox
 
 正是「你的总分：x」这些文本。翻译成编程语言就是：
 
-```
+```haskell
 render : Score -> Widget
 render x =
   Text
@@ -84,7 +84,7 @@ render x =
 
 正是「x + 2」。翻译成编程语言就是：
 
-```
+```haskell
 cooperate : 1 Score -> Score
 cooperate x = x + 2
 ```
@@ -95,7 +95,7 @@ cooperate x = x + 2
 
 我们希望页面是通过一个按钮来触发合作，所以可以改写渲染函数，使其渲染一个「列」，列里面有「文本框」和「按钮」，指定按钮的文本是「合作」，被按下之后执行 `cooperate` 函数。翻译成编程语言就是：
 
-```
+```haskell
 cooperate : 1 Score -> Score
 cooperate x = x + 2
 
@@ -111,7 +111,7 @@ render x =
 
 为简便起见，可以写成：
 
-```
+```haskell
 render : Score -> Widget
 render x = 
   Column
@@ -124,7 +124,7 @@ render x =
 
 那么我们也可以很简单地加上「欺骗」按钮：
 
-```
+```haskell
 render : Score -> Widget
 render x =
   Column
@@ -146,7 +146,7 @@ render x =
 
 我们的状态将有三个字段，一个是「一重凭证」（线性类型系统要求加入这玩意，我暂时难以通俗化解释，但你可以尝试感受其必要性）；一个是「总分」，类型是整数；一个是「是否显示」，类型是布尔（真或假）。翻译成编程语言就是：
 
-```
+```haskell
 data State
   tok : 1 Tok
   score : Int
@@ -155,7 +155,7 @@ data State
 
 那么合作可以写成：
 
-```
+```haskell
 cooperate : 1 State -> State
 cooperate { tok, score, visible } =
   { tok, score + 2, visible }
@@ -163,7 +163,7 @@ cooperate { tok, score, visible } =
 
 但假设我们有另外一种 `State`：
 
-```
+```haskell
 data State'
   tok : 1 Tok
   score : Int
@@ -176,7 +176,7 @@ data State'
 
 问题在于，我们错误地指定了 `cooperate` 的类型是 `1 State -> State`，因此硬编码了 `cooperate` 依赖于 `State` 中的所有字段。我们需要放宽这个类型限制，把 `State` 替换成「有 `score` 字段的类型」，就能更通用了：
 
-```
+```haskell
 cooperate { score .. } = { score + 2 .. }
 ```
 
@@ -186,7 +186,7 @@ cooperate { score .. } = { score + 2 .. }
 
 状态模型：
 
-```
+```haskell
 data State
   tok : 1 Tok
   score : Int
@@ -195,7 +195,7 @@ data State
 
 初值：
 
-```
+```haskell
 initState : 1 Tok -> State
 initState t =
   State
@@ -206,8 +206,8 @@ initState t =
 
 渲染函数：
 
-```
-render : 1 State -> State
+```haskell
+render : State -> Widget
 render st =
   case st.visible of
     False => Nothing
@@ -230,7 +230,7 @@ render st =
 
 现在你希望能维护对方的意图。对方意图是一个布尔值，为真表示合作，为假表示欺骗：
 
-```
+```haskell
 data State
   tok : 1 Tok
   score : Int
@@ -246,7 +246,7 @@ data State
 
 因此你可能会想实现成：
 
-```
+```haskell
 cooperate { score, coop .. } =
   coop' = fetch "server_url"
   case coop' of 
@@ -258,10 +258,10 @@ cooperate { score, coop .. } =
 
 如果把 `cooperate` 看成两次变化呢？一次是 `hitCooperate`，点击之后先发送请求，发完之后不等回复，只告诉对方「如果得到结果 `coop'`，在下一帧用 `doCooperate coop'` 改变状态」；一次是 `doCooperate`，根据已经获得的对方意图结算总分：
 
-```
+```haskell
 hitCooperate st =
-  fetch "server_url" (coop' =>
-    runNextFrame (1 st => doCooperate coop' st)
+  fetch "server_url" ( coop' =>
+    runNextFrame ( 1 st => doCooperate coop' st )
   )
   st
 
@@ -275,11 +275,11 @@ doCooperate coop' { score, coop .. } =
 
 ### 写法简化
 
-`fetch` 和 `runNextFrame` 后面都是回调函数，即「得到结果后回来调用」。考虑合并这两个函数为 `fetchAndRun`：
+`fetch` 和 `runNextFrame` 后面都是回调函数，即「得到结果后回来调用」。考虑合并这两个函数为 `updateAndFetch`：
 
-```
+```haskell
 hitCooperate st =
-  fetchAndRun "server_url" ((coop', 1 st) =>
+  updateAndFetch "server_url" ( ( coop', 1 st ) =>
     doCooperate coop' st
   )
   st
@@ -287,9 +287,9 @@ hitCooperate st =
 
 上面的写法还可以简化。使用 `<-` 代表经过一层回调：
 
-```
+```haskell
 cooperate st =
-  (coop', 1 { score, coop .. }) <- fetchAndRun "server_url"; st
+  ( coop', 1 { score, coop .. } ) <- updateAndFetch "server_url" st
   case coop' of 
     False => { score - 1, False .. }
     True => { score + 2, True .. }
@@ -299,7 +299,7 @@ cooperate st =
 
 状态模型：
 
-```
+```haskell
 data State
   tok : 1 Tok
   score : Int
@@ -309,7 +309,7 @@ data State
 
 初值：
 
-```
+```haskell
 initState : 1 Tok -> State
 initState t =
   State
@@ -321,7 +321,7 @@ initState t =
 
 分数计算，第一个参数是你是否合作，第二个参数是对面是否合作：
 
-```
+```haskell
 delta : Bool -> Bool -> Int
 delta True True = 2
 delta True False = -1
@@ -331,8 +331,8 @@ delta False False = 0
 
 渲染函数：
 
-```
-render : 1 State -> State
+```haskell
+render : State -> Widget
 render st =
   case st.visible of
     False => Nothing
@@ -343,12 +343,12 @@ render st =
         Button
           text = "合作"
           onTap = 1 st =>
-            (coop', { score, coop .. }) <- fetchAndRun "server_url"
+            ( coop', { score, coop .. } ) <- updateAndFetch "server_url" st
             { score + delta True coop', coop' .. }
         Button
           text = "欺骗"
           onTap = 1 st =>
-            (coop', { score, coop .. }) <- fetchAndRun "server_url"
+            ( coop', { score, coop .. } ) <- updateAndFetch "server_url" st
             { score + delta False coop', coop' .. }
         StickFigure
           -- 显示火柴人上次是否合作
@@ -360,7 +360,94 @@ render st =
 
 ## 动画
 
-TODO
+很显然只显示火柴人上次是否合作是不完整的。容易整理出，火柴人对于每一种合作情况以及初始状态，都有对应的初始动画和循环动画。对于每次点击按钮，都会有一个走路动画和一个投币动画。
+
+考虑将 `coop` 扩展为双方的合作状态（总共有五种可能），且维护 `anchor` 表示上一次点击按钮的时间，`now` 表示当前时间。
+
+### 页面实现
+
+状态模型：
+
+```haskell
+data State
+  tok : 1 Tok
+  score : Int
+  visible : Bool
+  coop = Init
+       | CoopState
+           self : Bool
+           oppo : Bool
+  anchor : Time
+  now : Time
+```
+
+初值：
+
+```haskell
+initState : 1 Tok -> State
+initState t =
+  now <- currentTime
+  State
+    tok = t
+    score = 0
+    visible = True
+    coop = Init
+    anchor = now
+    now = now
+```
+
+渲染函数：
+
+```haskell
+delta : Bool -> Bool -> Int
+delta True True = 2
+delta True False = -1
+delta False True = 3
+delta False False = 0
+
+mirror : CoopState -> CoopState
+mirror Init = Init
+mirror { self, oppo } = { oppo, self }
+
+commitIntent : Bool -> 1 State -> State
+commitIntent selfCoop st =
+  ( oppoCoop, { anchor .. } ) <- updateAndFetch "server_url" st
+  { score, coop .. } <- updateAndSleep ( seconds 1 ) { currentTime! .. }
+  { score + delta selfCoop oppoCoop, CoopState selfCoop oppoCoop .. }
+
+onFrame : 1 State -> State
+onFrame { now .. } = { currentTime! .. }
+
+render : State -> Widget
+render st =
+  case st.visible of
+    False => Nothing
+    True =>
+      Column
+        Text
+          text = "你的总分：" + st.score
+        Row
+          StickFigure
+            coopState = st.coop
+            faceAnim = st.now - ( st.anchor + seconds 1 )
+            walkAnim = st.now - st.anchor
+          Machine
+          Mirrored
+            StickFigure
+              coopState = mirror st.coop
+              faceAnim = st.now - ( st.anchor + seconds 1 )
+              walkAnim = st.now - st.anchor
+        Row
+          Button
+            text = "合作"
+            onTap = commitIntent True
+          Button
+            text = "欺骗"
+            onTap = commitIntent False
+        Button
+          text = "退出"
+          onTap = 1 { visible .. } => { False .. }
+```
 
 ## 补充内容
 
@@ -368,7 +455,7 @@ TODO
 
 状态模型：
 
-```
+```haskell
 data State
   tok : 1 Tok
   count : Int
@@ -376,7 +463,7 @@ data State
 
 初值：
 
-```
+```haskell
 initState : 1 Tok -> State
 initState t =
   State
@@ -386,7 +473,7 @@ initState t =
 
 渲染函数：
 
-```
+```haskell
 render : State -> Widget
 render st =
   Row
