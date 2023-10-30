@@ -1,5 +1,5 @@
-.PHONY: sync
-sync:
+.PHONY: all
+all:
 	hexo generate
 	hexo deploy
 	git add .
