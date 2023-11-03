@@ -5,17 +5,17 @@ tags:
 - 草稿
 ---
 
-本文主要讲解 GLM-130B[^1] 的工作原理，可能并不适用于 GPT-3.5、GPT-4 等闭源模型，但依然能大致反映大语言模型的机制。对于有一定耐心的读者，我强烈推荐阅读原论文。
+本文主要讲解 GLM-130B [^1] 的工作原理，可能并不适用于 GPT-3.5、GPT-4 等闭源模型，但依然能大致反映大语言模型的机制。对于有一定耐心的读者，我强烈推荐阅读原论文。
 
 ## 参考论文
 
-- GLM-130B[^1]
-  - GLM[^2]
-    - Transformer[^3]
-      - LayerNorm[^4]
-    - Parallelism[^5]
-    - GeLU[^6]
-    - Shuffling[^7]
+- GLM-130B [^1]
+  - GLM [^2]
+    - Transformer [^3]
+      - LayerNorm [^4]
+    - Parallelism [^5]
+    - GeLU [^6]
+    - Shuffling [^7]
 
 
 
