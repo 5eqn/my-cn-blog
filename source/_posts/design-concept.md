@@ -513,3 +513,26 @@ render st =
 - 列表的可视化怎么做？
   - 向 `if` 一样采用中间层
   - 层数对应表达式语法树层数，后续计划写一篇讲对应关系
+- InheritedWidget 和 StatefulWidget 如何建模？
+  - Widget as Effect?
+    - 把 useEffect 整成类似于 Consumer 的东西
+    - 对于 InheritedWidget，自动在顶部创建状态存储器
+      - 缺点：不能多个 InheritedWidget 并列
+  - 参考 React useState，在 context 引入 getter 和 setter
+    - 定义
+      - getter : Ref T, bind : Ref T -> (T -> Ref U) -> Ref U
+      - setter : Lin T, bind : Lin T -> (1 T -> Lin U) -> Lin U
+      - 注意没有 {T : Type} 这个隐式参数！
+    - 隐式参数
+      - 遇到未定义变量先加隐式参数
+      - 如果外面无法提供隐式参数再报错
+    - 初值
+      - useState 接受 (1 Tok -> T)
+- 如何表述对 Consumer 和 Provider 的封装？
+  - Consumer：用一个新组件包着原版 Consumer，然后加东西和 child 字段
+  - Provider：不需要封装
+    - 封装的 Consumer 用到的字段通过 row poly 推导成类型限制
+    - 给 Consumer 类型参数时检查是否符合类型限制
+- 如何表述网络相关内容？
+  - 从 init 或侦听事件函数开始
+  - 状态修改参考上面
