@@ -5,7 +5,7 @@ tags:
 - AI
 ---
 
-对于有耐心的读者，我强烈推荐从 [CS 自学指南](https://csdiy.wiki/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/CS231/)深度学习板块中选择一个课程看完，我看的是 [CS231n](http://cs231n.stanford.edu/)。本篇文章仅是使用自然语言模糊地介绍深度学习。
+对于有耐心的读者，我强烈推荐从 [CS 自学指南](https://csdiy.wiki/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/CS231/) 深度学习板块中选择一个课程看完，我看的是 [CS231n](http://cs231n.stanford.edu/)。本篇文章仅是使用自然语言模糊地介绍深度学习。
 
 ## 正文
 
