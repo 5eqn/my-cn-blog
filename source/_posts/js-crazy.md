@@ -1,10 +1,10 @@
 ---
-title: 前端 | JavaScript 让我为之癫狂
+title: JavaScript 让我为之癫狂
 date: 2023-09-15 15:59:42
 tags:
+- 编程
 - 前端
 - JavaScript
-- 痛苦
 ---
 
 ## Scene 1
