@@ -1,5 +1,5 @@
 ---
-title: FStar 官方习题 Case Study: Quicksort
+title: FStar 官方习题 Case Study - Quicksort
 date: 2023-01-20 23:12:33
 tags:
 - 编程
